@@ -31,7 +31,7 @@ public class ArticleController {
 
     @HystrixCommand(fallbackMethod = "fallback")
     @RequestMapping(method = RequestMethod.POST , value = "/createIndex")
-    public String createIndex(@RequestBody Map<String , String> map) {
+    public String createIndex(@RequestParam  Map<String , String> map) {
         try {
             elasticData.createIndex(map.get("name"));
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class ArticleController {
 
     @HystrixCommand(fallbackMethod = "articleFallback")
     @RequestMapping(method = RequestMethod.POST , value = "/create")
-    public Article createArticle(@RequestBody Article article) {
+    public Article createArticle(@RequestParam Article article) {
         try {
             return elasticData.createArticle(article);
         } catch (Exception e) {

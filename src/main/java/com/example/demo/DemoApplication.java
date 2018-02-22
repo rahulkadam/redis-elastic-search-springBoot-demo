@@ -4,7 +4,6 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,7 +69,6 @@ class RestController1 {
 	@HystrixCommand(fallbackMethod = "fallback")
 	@RequestMapping(method = RequestMethod.GET , value = "/fallbacktest")
 	public String fallackTest() {
-		int a = 5/0;
 		return dataService.getCount();
 	}
 }

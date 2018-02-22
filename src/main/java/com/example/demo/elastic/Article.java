@@ -1,5 +1,8 @@
 package com.example.demo.elastic;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Article {
     public String author;
     public String content;
