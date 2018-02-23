@@ -21,20 +21,18 @@ https://rediselasticdemo.cfapps.io/get/redis
    2. Creeate mapping/document
    3. Search in that document
    
-   
-   
-   Installation:
-      We have done this on Pivotal.
-      Create 2 service on Pivotal.
-       1. redis
-       2. Elastic Search
-     Create Spring Boot app which will have dependency of this.
-     you can do it using start.spring.io too.
+Installation:
+    We have done this on Pivotal.
+    Create 2 service on Pivotal.
+    1. redis.
+    2. Elastic Search.
+   Create Spring Boot app which will have dependency of this.
+   you can do it using start.spring.io too.
      
      login to CF using CLI :
      cf login
      cf push appname -p target/jarFile.jar
      
-  This work is in progress.. we will add some more things here to make it more efficiant and easy to up and running.
+  This work is in progress. we will add some more things here to make it more efficiant and easy to up and running.
      
 
