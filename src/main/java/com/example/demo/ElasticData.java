@@ -40,10 +40,20 @@ public class ElasticData {
         return article;
     }
     public List<Article> searchArticle(String query) throws Exception{
-        Search search = (Search) new Search.Builder(query)
-                .addIndex("articles")
-                .addType("article").build();
+        String data = "\"query\": {\"bool\": { \"must\": [{ \"match\": { \"message\": "+ query+" } }]}}})";
+        String query1 = "{\n" +
+                "    \"query\": {\n" +
+                "\"match\" : { "+
+                "\"author\" : \""+ query + "\""+
+                " }\n" +
+                " }\n" +
+                "}";
+
+        Search search = (Search) new Search.Builder(query1)
+                .addIndex("article")
+                .addType("article")
+                .build();
         JestResult result =  jestClient.execute(search);
-        return (List<Article>)result.getSourceAsObject(Article.class);
+        return (List<Article>)result.getSourceAsObjectList(Article.class);
     }
 }
