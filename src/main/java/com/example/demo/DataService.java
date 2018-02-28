@@ -28,13 +28,13 @@ public class DataService {
 
             // Initialize memcached Pool
             AuthDescriptor ad = new AuthDescriptor(new String[] { "PLAIN" },
-                    new PlainCallbackHandler("b8a6dc1a-89a7-4711-9028-2a0d399abb57", "GdnFV8scVqkpe8PA"));
+                    new PlainCallbackHandler("d4b8399f-40f5-4127-ab8b-7faa3332747e", "7xGiE2u2FGtZ2u87lH3pSzLULZjjU8UX"));
 
             mc = new MemcachedClient(
                     new ConnectionFactoryBuilder()
                             .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
                             .setAuthDescriptor(ad).build(),
-                    AddrUtil.getAddresses("memcached-19813.c11.us-east-1-3.ec2.cloud.redislabs.com:19813"));
+                    AddrUtil.getAddresses("memcached-11366.c13.us-east-1-3.ec2.cloud.redislabs.com:11366"));
         } catch (Exception e) {
             e.printStackTrace();
         }
