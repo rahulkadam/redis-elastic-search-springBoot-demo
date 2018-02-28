@@ -35,7 +35,7 @@ public class ElasticData {
     }
 
     public Article createArticle(Article article) throws Exception{
-        Index index = new Index.Builder(article).index("articles").type("article").build();
+        Index index = new Index.Builder(article).index("article").type("article").build();
         jestClient.execute(index);
         return article;
     }

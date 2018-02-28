@@ -4,6 +4,7 @@ import com.example.demo.ElasticData;
 import com.example.demo.elastic.Article;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ArticleController {
 
     @HystrixCommand(fallbackMethod = "articleFallback")
     @RequestMapping(method = RequestMethod.POST , value = "/create")
-    public Article createArticle(@RequestParam Article article) {
+    public Article createArticle(@RequestBody Article article) {
         try {
             return elasticData.createArticle(article);
         } catch (Exception e) {
