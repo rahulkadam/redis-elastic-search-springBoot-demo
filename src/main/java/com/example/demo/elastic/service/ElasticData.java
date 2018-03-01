@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.elastic.service;
 
 import com.example.demo.configuration.SpringConfiguration;
 import com.example.demo.elastic.Article;
