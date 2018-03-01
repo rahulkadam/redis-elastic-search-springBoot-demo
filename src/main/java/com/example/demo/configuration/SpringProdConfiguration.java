@@ -1,9 +1,7 @@
 package com.example.demo.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
-import io.searchbox.client.config.ClientConfig;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.client.http.JestHttpClient;
 import net.spy.memcached.AddrUtil;
@@ -12,13 +10,10 @@ import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.auth.AuthDescriptor;
 import net.spy.memcached.auth.PlainCallbackHandler;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
@@ -28,29 +23,15 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-@Profile("dev")
-public class SpringConfiguration {
-
-    @Value("${elastic.url}")
-    private String connectionUrl;
-
-    @Value("${jedis.hostname}")
-    private String jedisHostname;
-    @Value("${jedis.password}")
-    private String jedisPassword;
-    @Value("${jedis.port}")
-    private Integer jedisPort;
-
-    @Value("${memcache.servername}")
-    private String memCacheServerName;
-    @Value("${memcache.password}")
-    private String memCachePassword;
-    @Value("${memcache.username}")
-    private String memCacheUserName;
+@Profile("release")
+public class SpringProdConfiguration {
 
     @Bean
-    @ConditionalOnProperty(name = "PivotalEnv", havingValue = "local")
-    public JestHttpClient jestClientLocal() throws Exception {
+    @ConditionalOnProperty(name = "PivotalEnv", havingValue = "production")
+    public JestHttpClient jestClientProd() throws Exception {
+        Map result = new ObjectMapper().readValue(System.getenv("VCAP_SERVICES"), HashMap.class);
+        String connectionUrl = (String) ((Map) ((Map) ((List)
+                result.get("searchly")).get(0)).get("credentials")).get("uri");
         HttpClientConfig clientConfig = new HttpClientConfig.
                 Builder(connectionUrl)
                 .multiThreaded(true)
@@ -63,28 +44,38 @@ public class SpringConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "PivotalEnv", havingValue = "local")
-    public JedisPool redisClient() throws Exception {
+    @ConditionalOnProperty(name = "PivotalEnv", havingValue = "production")
+    public JedisPool redisClientProd() throws Exception {
+        Map result = new ObjectMapper().readValue(System.getenv("VCAP_SERVICES"), HashMap.class);
+        Map redisCacheMap = ((Map) ((Map) ((List) result.get("rediscloud")).get(0)).get("credentials"));
+
+        String hostname = (String) redisCacheMap.get("hostname");
+        String password = (String) redisCacheMap.get("password");
+        Integer port = Integer.parseInt((String) redisCacheMap.get("port"));
         return new JedisPool(new JedisPoolConfig(),
-                jedisHostname,
-                jedisPort,
+                hostname,
+                port,
                 Protocol.DEFAULT_TIMEOUT,
-                jedisPassword);
+                password);
     }
 
     @Bean
-    @ConditionalOnProperty(name = "PivotalEnv", havingValue = "local")
-    public MemcachedClient memCachedClient() throws Exception {
+    @ConditionalOnProperty(name = "PivotalEnv", havingValue = "production")
+    public MemcachedClient memCachedClientProd() throws Exception {
 
+        Map result = new ObjectMapper().readValue(System.getenv("VCAP_SERVICES"), HashMap.class);
+        Map memcacheMap = ((Map) ((Map) ((List) result.get("memcachedcloud")).get(0)).get("credentials"));
+        String serverName = (String) memcacheMap.get("servers");
+        String username = (String) memcacheMap.get("username");
+        String password = (String) memcacheMap.get("password");
         // Initialize memcached Pool
         AuthDescriptor ad = new AuthDescriptor(new String[]{"PLAIN"},
-                new PlainCallbackHandler(memCacheUserName, memCachePassword));
+                new PlainCallbackHandler(username, password));
 
         return new MemcachedClient(
                 new ConnectionFactoryBuilder()
                         .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
                         .setAuthDescriptor(ad).build(),
-                AddrUtil.getAddresses(memCacheServerName));
+                AddrUtil.getAddresses(serverName));
     }
-
 }

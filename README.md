@@ -57,3 +57,9 @@ Curl Request For creating Document :
  
 Request for fetch article from elastic Search : 
       https://redisdemo.cfapps.io/article/search/bb
+      
+Development build using maven : 
+    mvn install -DskipTests -Pdev
+    
+Production build using maven : 
+    mvn install -DskipTests -Prelease
