@@ -1,5 +1,7 @@
 package com.example.demo.cache;
 
+import com.example.demo.util.stats.RecordTime;
+import com.example.demo.util.stats.TimeParam;
 import io.searchbox.client.JestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,13 +38,20 @@ public class RedisService {
         }
     }
 
+    @RecordTime
     public String getCount() {
         try {
             Jedis jd = jedisPool.getResource();
             String redisvalue = jd.get("count");
+            checkingParamAnotation(redisvalue);
             return redisvalue;
         } catch (Exception e) {
             return "Error Occure";
         }
+    }
+
+    @RecordTime
+    private void checkingParamAnotation(@TimeParam(value = "str") String str) {
+        System.out.println("Executed Filed param : " + str);
     }
 }
