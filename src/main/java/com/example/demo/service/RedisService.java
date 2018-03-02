@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 /**
  * Service to store and fetch data from Redis.
  */
@@ -53,6 +57,20 @@ public class RedisService {
             return value;
         } catch (Exception e) {
             return "Error Occure";
+        }
+    }
+
+
+    /**
+     * Fetch List of keys value from Redis
+     * @return
+     */
+    public Set<String> getKeys() {
+        try {
+            Jedis jd = jedisPool.getResource();
+            return jd.keys("*");
+        } catch (Exception e) {
+            return new TreeSet<>();
         }
     }
 

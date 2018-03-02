@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/redis")
 public class RedisCacheController {
@@ -45,5 +48,12 @@ public class RedisCacheController {
     @RequestMapping(method = RequestMethod.GET, value = "count")
     public String getCount() {
         return redisService.getCount();
+    }
+
+    @RecordTime
+    @HystrixCommand(fallbackMethod = "fallback")
+    @RequestMapping(method = RequestMethod.GET, value = "/keys")
+    public Set<String> getKeys() {
+        return redisService.getKeys();
     }
 }
