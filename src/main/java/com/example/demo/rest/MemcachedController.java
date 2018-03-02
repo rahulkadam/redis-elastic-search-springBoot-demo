@@ -1,6 +1,6 @@
 package com.example.demo.rest;
 
-import com.example.demo.cache.MemcacheService;
+import com.example.demo.service.MemcacheService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,6 +1,6 @@
 package com.example.demo.rest;
 
-import com.example.demo.cache.RedisService;
+import com.example.demo.service.RedisService;
 import com.example.demo.util.stats.RecordTime;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.logging.log4j.LogManager;

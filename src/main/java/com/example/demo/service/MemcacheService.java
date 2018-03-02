@@ -1,4 +1,4 @@
-package com.example.demo.cache;
+package com.example.demo.service;
 
 import net.spy.memcached.MemcachedClient;
 import org.springframework.beans.factory.annotation.Autowired;

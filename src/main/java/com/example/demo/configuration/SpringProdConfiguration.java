@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Property spring configuration to be used on Production with profile release
+ */
 @Configuration
 @Profile("release")
 public class SpringProdConfiguration {

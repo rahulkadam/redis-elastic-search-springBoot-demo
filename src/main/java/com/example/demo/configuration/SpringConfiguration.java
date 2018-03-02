@@ -27,6 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Spring configuration for profile Dev. This should accept argument from dev application resource
+ * application-dev.properties
+ */
 @Configuration
 @Profile("dev")
 public class SpringConfiguration {
@@ -48,6 +52,12 @@ public class SpringConfiguration {
     @Value("${memcache.username}")
     private String memCacheUserName;
 
+    /**
+     * should create bean from this if property PivotalEnv is present and it's value is local
+     * we do not require it now as we are using maven bases profile
+     * @return
+     * @throws Exception
+     */
     @Bean
     @ConditionalOnProperty(name = "PivotalEnv", havingValue = "local")
     public JestHttpClient jestClientLocal() throws Exception {
@@ -76,7 +86,6 @@ public class SpringConfiguration {
     @ConditionalOnProperty(name = "PivotalEnv", havingValue = "local")
     public MemcachedClient memCachedClient() throws Exception {
 
-        // Initialize memcached Pool
         AuthDescriptor ad = new AuthDescriptor(new String[]{"PLAIN"},
                 new PlainCallbackHandler(memCacheUserName, memCachePassword));
 
