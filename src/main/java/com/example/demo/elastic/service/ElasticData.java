@@ -65,8 +65,8 @@ public class ElasticData {
         jestClient.execute(index);
         return product;
     }
+    
     public List<Product> searchProduct(String query) throws Exception{
-        String data = "\"query\": {\"bool\": { \"must\": [{ \"match\": { \"message\": "+ query+" } }]}}})";
         String query1 = "{\n" +
                 "    \"query\": {\n" +
                 "\"match\" : { "+

@@ -36,6 +36,7 @@ public class ElasticProductController {
     @RequestMapping(method = RequestMethod.POST , value = "/add")
     public Product addProduct(@RequestBody Product product) {
         try {
+            elasticData.addProduct(product);
             return redisService.addProduct(product);
         } catch (Exception e) {
             return new Product();
