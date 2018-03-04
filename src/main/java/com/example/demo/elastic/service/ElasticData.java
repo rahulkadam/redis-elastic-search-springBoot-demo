@@ -65,7 +65,7 @@ public class ElasticData {
         jestClient.execute(index);
         return product;
     }
-    
+
     public List<Product> searchProduct(String query) throws Exception{
         String query1 = "{\n" +
                 "    \"query\": {\n" +
