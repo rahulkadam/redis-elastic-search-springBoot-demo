@@ -1,32 +1,36 @@
 package com.example.demo.dto.stats;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.UUID;
 
 public class Message {
-    private UUID id;
+    private Long id;
+    private UUID uuid;
     private StringBuilder message;
     private long created;
     private String[] topics;
     private User user;
 
     public Message() {
-        id = UUID.randomUUID();
+        uuid = UUID.randomUUID();
+        id = new Random().nextLong();
     }
 
-    public Message(UUID id, StringBuilder message, long created, String[] topics, User user) {
+    public Message(Long id, StringBuilder message, long created, String[] topics, User user) {
         this.id = id;
         this.message = message;
         this.created = created;
         this.topics = topics;
         this.user = user;
+        uuid = UUID.randomUUID();
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -70,6 +74,14 @@ public class Message {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     @Override

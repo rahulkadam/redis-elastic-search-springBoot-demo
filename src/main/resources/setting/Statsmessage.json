@@ -1,0 +1,52 @@
+{
+  "settings" : {
+    "number_of_shards" : 1
+  },
+  "mappings" : {
+    "type1" : {
+      "properties": {
+        "uuid": { "type": "keyword" },
+        "id":   { "type": "keyword" },
+        "message": {  "type": "text"},
+        "created": { "type": "long" },
+        "user" : {
+          "type": "nested",
+          "include_in_parent": true,
+          "properties": {
+            "id":   { "type": "long" },
+            "name": {  "type": "keyword"}
+          }
+        }
+      }
+    }
+  }
+}
+
+
+/**  Create Index CURL Request with Index Type
+curl -X PUT "http://cloudfoundry:5dc97fd3a1340f8690d9f3686a26c25a@thorin-us-east-1.searchly.com/stats" -H 'Content-Type: application/json' -d'
+{
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+        "type1" : {
+		  "properties": {
+			"uuid": { "type": "keyword" },
+			"id":   { "type": "keyword" },
+			"message": {  "type": "text"},
+			"created": { "type": "long" },
+			"user" : {
+			  "type": "nested",
+			  "include_in_parent": true,
+			  "properties": {
+				"id":   { "type": "long" },
+				"name": {  "type": "keyword"}
+			  }
+			}
+		  }
+		}
+    }
+}
+'
+*/

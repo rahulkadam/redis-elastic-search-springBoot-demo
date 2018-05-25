@@ -5,8 +5,10 @@ import com.example.demo.elastic.Article;
 import com.example.demo.service.RedisService;
 import com.example.demo.service.WhatsappMessageReader;
 import com.google.gson.JsonObject;
+import io.searchbox.action.BulkableAction;
 import io.searchbox.client.JestResult;
 import io.searchbox.client.http.JestHttpClient;
+import io.searchbox.core.Bulk;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
@@ -22,6 +24,7 @@ import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,29 +67,31 @@ public class WhatsAppData {
      * @throws Exception
      */
     public void saveMessage(List<Message> messages) throws Exception {
+        List<BulkableAction> bulk = new ArrayList<>();
         messages.stream().forEach(message -> {
-            try {
-                saveMessage(message);
-            }catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            bulk.add(createBulksAction(message));
         });
+        Bulk bulkRequest = new Bulk.Builder().addAction(bulk).build();
+        JestResult result = jestClient.execute(bulkRequest);
+        if(result.getErrorMessage() != null) {
+            throw new Exception(result.getErrorMessage());
+        }
     }
 
 
+    private BulkableAction createBulksAction(Message message) {
+        return new Index.Builder(message).index(indexName).type(indexType).id(String.valueOf(message.getId())).build();
+    }
+
     /**
-     * Bulk bulk = new Bulk.Builder()
-     .addAction(new Index.Builder(article1).index("articles").type("article").build())
-     .addAction(new Index.Builder(article2).index("articles").type("article").build())
-     .build();
-     result = jestClient.execute(bulk);
      * @param message
      * @return
      * @throws IOException
      */
-    public Message saveMessage(Message message) throws IOException {
-        Index index = new Index.Builder(message).index(indexName).type(indexType).build();
-        jestClient.execute(index);
+    public Message saveMessage(Message message) throws Exception {
+        List<Message> messages = new ArrayList<>();
+        messages.add(message);
+        saveMessage(messages);
         return message;
     }
 
@@ -116,12 +121,12 @@ public class WhatsAppData {
         return " { \"query\": " + builder.toString() +" } ";
     }
 
-    public String aggregationBasicQuery(String term , String field) {
+    public String aggregationBasicQuery(String term, String field) {
         /*
          */
         return " { \"aggs\":  {" +
-                "             \""+ term +"\": {" +
-                "              \"terms\" : { \"field\": \""+ field +"\" } } " +
+                "             \"" + term + "\": {" +
+                "              \"terms\" : { \"field\": \"" + field + "\" } } " +
                 "     }}";
     }
 
